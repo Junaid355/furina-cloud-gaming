@@ -300,4 +300,23 @@ foreach (var ip in hostHw.LocalIpAddresses)
 Console.WriteLine($"  -> http://localhost:8080");
 Console.WriteLine("================================================================================");
 
-app.Run();
+bool isHeadless = args.Contains("--headless");
+
+if (isHeadless)
+{
+    app.Run();
+}
+else
+{
+    _ = Task.Run(() => app.Run());
+    try
+    {
+        ApplicationConfiguration.Initialize();
+        Application.Run(new FurinaHost.UI.HostForm());
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"[GUI Warning] Falling back to console mode: {ex.Message}");
+        app.WaitForShutdown();
+    }
+}
