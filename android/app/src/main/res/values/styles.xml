@@ -1,0 +1,9 @@
+<!-- d:\cloud\android\app\src\main\res\values\styles.xml -->
+<resources>
+    <style name="Theme.FurinaCloud" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="android:windowBackground">#080c16</item>
+        <item name="android:statusBarColor">#080c16</item>
+        <item name="android:navigationBarColor">#080c16</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+</resources>

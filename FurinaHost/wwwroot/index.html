@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en" style="background-color: #080c16;">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#080c16">
+  <title>Furina Cloud Gaming</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/assets/icons/furina-logo.svg">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="theme-furina" style="background-color: #080c16; color: #e2e8f0;">
+  <!-- Top Global Header (Hidden during Play mode) -->
+  <header id="appHeader" class="app-header">
+    <div class="brand">
+      <img src="/assets/icons/furina-logo.svg" alt="Furina Emblem" class="brand-logo">
+      <div class="brand-text">
+        <span class="brand-title">FURINA</span>
+        <span class="brand-subtitle">CLOUD GAMING</span>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-btn active" data-tab="tab-home">
+        <span class="icon">🏛️</span> Home
+      </button>
+      <button class="nav-btn" data-tab="tab-library">
+        <span class="icon">🎮</span> Library
+      </button>
+      <button class="nav-btn" data-tab="tab-settings">
+        <span class="icon">⚙️</span> Settings
+      </button>
+    </nav>
+
+    <!-- Header Actions & Status -->
+    <div class="header-status">
+      <div id="connectionBadge" class="status-badge disconnected">
+        <span class="status-dot"></span>
+        <span id="connectionText">Disconnected</span>
+      </div>
+      <button id="btnPairModal" class="btn btn-outline btn-sm">Pair PC</button>
+      <button id="btnHeaderEmergency" class="btn btn-danger btn-sm" title="Release all active keys/buttons">Stop Input</button>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main id="mainContainer" class="main-container">
+    
+    <!-- TAB 1: HOME -->
+    <section id="tab-home" class="tab-pane active">
+      <div class="hero-banner">
+        <div class="hero-content">
+          <div class="hero-tag">LOW-LATENCY PC TO MOBILE STREAMING</div>
+          <h1 class="hero-title">Play Your PC Library Anywhere</h1>
+          <p class="hero-desc">Stream games from your Windows PC to iPhone, iPad, or Android with bespoke, responsive touch controls crafted for each title.</p>
+          <div class="hero-actions">
+            <button id="btnHeroQuickPlay" class="btn btn-primary btn-lg">⚡ Quick Connect & Play</button>
+            <button id="btnHeroBrowse" class="btn btn-glass btn-lg">Browse Library</button>
+          </div>
+        </div>
+        <div class="hero-host-card glass-panel">
+          <div class="card-header">
+            <h3>🖥️ Host PC Status</h3>
+            <span id="hostStatusPill" class="pill pill-offline">Offline</span>
+          </div>
+          <div class="host-specs-grid">
+            <div class="spec-item">
+              <span class="spec-label">Host Machine</span>
+              <span id="specHostName" class="spec-value">-</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">GPU</span>
+              <span id="specGpu" class="spec-value">-</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">CPU & RAM</span>
+              <span id="specCpuRam" class="spec-value">-</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Display</span>
+              <span id="specDisplay" class="spec-value">-</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Stream FPS</span>
+              <span id="specFps" class="spec-value">0 FPS</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Current PIN</span>
+              <span id="specPin" class="spec-value highlight-pin">----</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Launch Row -->
+      <div class="section-title-row">
+        <h2>🔥 Quick Launch Profiles</h2>
+      </div>
+      <div id="quickLaunchGrid" class="game-grid mini">
+        <!-- Rendered dynamically -->
+      </div>
+    </section>
+
+    <!-- TAB 2: GAME LIBRARY -->
+    <section id="tab-library" class="tab-pane">
+      <div class="library-header">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="gameSearchInput" placeholder="Search installed games or profiles...">
+        </div>
+        <div class="library-actions">
+          <button id="btnAddCustomGame" class="btn btn-primary">+ Add Custom Game</button>
+          <button id="btnRefreshGames" class="btn btn-glass">🔄 Refresh</button>
+        </div>
+      </div>
+
+      <div id="gameLibraryGrid" class="game-grid">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </section>
+
+    <!-- TAB 3: SETTINGS -->
+    <section id="tab-settings" class="tab-pane">
+      <div class="settings-grid">
+        <div class="settings-group glass-panel">
+          <h3>📺 Video & Stream Engine</h3>
+          <div class="setting-item">
+            <label for="selResolution">Target Resolution</label>
+            <select id="selResolution" class="form-control">
+              <option value="1920x1080">1080p (1920x1080) — Best Quality</option>
+              <option value="1280x720" selected>720p (1280x720) — Balanced / Low Latency</option>
+              <option value="960x540">540p (960x540) — High FPS / Mobile Data</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label for="selFps">Target Frame Rate</label>
+            <select id="selFps" class="form-control">
+              <option value="60" selected>60 FPS (Ultra Smooth)</option>
+              <option value="30">30 FPS (Power Saver)</option>
+            </select>
+          </div>
+          <div class="setting-item">
+            <label for="rangeQuality">Stream Quality: <span id="lblQuality">80%</span></label>
+            <input type="range" id="rangeQuality" min="30" max="95" value="80" class="range-slider">
+          </div>
+          <div class="setting-item">
+            <label for="selFit">Viewport Display Fit</label>
+            <select id="selFit" class="form-control">
+              <option value="contain" selected>Fit Screen (Aspect Ratio Preserved)</option>
+              <option value="fill">Stretch to Fill</option>
+              <option value="cover">Zoom to Fill (Crop Edges)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="settings-group glass-panel">
+          <h3>🎮 Touch & Input Options</h3>
+          <div class="setting-item toggle-item">
+            <div>
+              <div class="setting-label">Haptic Feedback</div>
+              <div class="setting-sub">Vibrate phone on button presses and actions</div>
+            </div>
+            <input type="checkbox" id="chkHaptics" checked class="switch">
+          </div>
+          <div class="setting-item toggle-item">
+            <div>
+              <div class="setting-label">Dynamic Floating Joystick</div>
+              <div class="setting-sub">Joystick spawns wherever left thumb touches</div>
+            </div>
+            <input type="checkbox" id="chkDynamicJoy" checked class="switch">
+          </div>
+          <div class="setting-item">
+            <label for="rangeGlobalOpacity">Default Controls Opacity: <span id="lblGlobalOpacity">80%</span></label>
+            <input type="range" id="rangeGlobalOpacity" min="10" max="100" value="80" class="range-slider">
+          </div>
+          <div class="setting-item">
+            <label for="rangeLookSens">Camera Look Sensitivity: <span id="lblLookSens">1.0x</span></label>
+            <input type="range" id="rangeLookSens" min="0.2" max="3.0" step="0.1" value="1.0" class="range-slider">
+          </div>
+        </div>
+
+        <div class="settings-group glass-panel">
+          <h3>🔗 Host & Connection</h3>
+          <div class="setting-item">
+            <label for="txtHostIp">Host PC IP Address</label>
+            <input type="text" id="txtHostIp" placeholder="e.g. 192.168.1.100" class="form-control">
+          </div>
+          <div class="setting-item">
+            <label for="txtHostPort">Host Port</label>
+            <input type="number" id="txtHostPort" value="8080" class="form-control">
+          </div>
+          <div class="setting-actions">
+            <button id="btnSaveHostSettings" class="btn btn-primary">Save & Connect</button>
+            <button id="btnRegeneratePin" class="btn btn-outline">Regenerate Host PIN</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============================================================== -->
+  <!-- FULLSCREEN GAME STREAMING VIEWPORT & TOUCH OVERLAY             -->
+  <!-- ============================================================== -->
+  <div id="playViewport" class="play-viewport hidden">
+    <!-- The Hardware-Accelerated Stream Canvas -->
+    <canvas id="streamCanvas" class="stream-canvas"></canvas>
+
+    <!-- In-Game HUD overlay -->
+    <div id="streamHud" class="stream-hud">
+      <div class="hud-left">
+        <span id="hudGameName" class="hud-game-name">Desktop</span>
+        <span id="hudFpsBadge" class="hud-stat">60 FPS</span>
+        <span id="hudPingBadge" class="hud-stat">12 ms</span>
+      </div>
+      <div class="hud-right">
+        <button id="btnHudToggleEditor" class="hud-btn" title="Edit Touch Controls">✏️ Edit</button>
+        <button id="btnHudRecenter" class="hud-btn" title="Reset Camera Delta">🎯 Center</button>
+        <button id="btnHudOpacity" class="hud-btn" title="Change Opacity">👁️ Opacity</button>
+        <button id="btnHudEmergency" class="hud-btn hud-btn-danger" title="Release Keys">⚠️ Stop Input</button>
+        <button id="btnHudDisconnect" class="hud-btn hud-btn-danger" title="Exit Stream">✕ Exit</button>
+      </div>
+    </div>
+
+    <!-- Active Touch Control Layer (Touch events intercepted here) -->
+    <div id="touchOverlay" class="touch-overlay"></div>
+
+    <!-- Live Control Editor Panel (Shown in Edit Mode) -->
+    <div id="editorDrawer" class="editor-drawer hidden">
+      <div class="editor-header">
+        <h4>Touch Layout Editor</h4>
+        <button id="btnCloseEditor" class="btn btn-sm btn-glass">Done</button>
+      </div>
+      <div class="editor-body">
+        <div class="editor-row">
+          <button id="btnAddButton" class="btn btn-sm btn-outline">+ Add Button</button>
+          <button id="btnAddJoystick" class="btn btn-sm btn-outline">+ Add Joystick</button>
+          <button id="btnResetLayout" class="btn btn-sm btn-danger">Reset to Default</button>
+        </div>
+        <div id="selectedElementConfig" class="selected-element-config hidden">
+          <div class="config-title">Selected: <span id="lblSelectedId">None</span></div>
+          <div class="config-grid">
+            <div class="config-field">
+              <label>Label</label>
+              <input type="text" id="txtElemLabel" class="form-control form-control-sm">
+            </div>
+            <div class="config-field">
+              <label>Mapped Key / Action</label>
+              <select id="selElemKey" class="form-control form-control-sm">
+                <option value="WASD">WASD (Movement)</option>
+                <option value="MouseLook">Mouse Look (Camera Swipe)</option>
+                <option value="MouseLeft">Mouse Left Click</option>
+                <option value="MouseRight">Mouse Right Click</option>
+                <option value="MouseMiddle">Mouse Middle Click</option>
+                <option value="Space">Space (Jump)</option>
+                <option value="ShiftLeft">Shift (Sprint / Dodge)</option>
+                <option value="ControlLeft">Ctrl (Crouch)</option>
+                <option value="KeyE">E (Interact / Skill)</option>
+                <option value="KeyQ">Q (Burst / Echo)</option>
+                <option value="KeyR">R (Reload / Liberation)</option>
+                <option value="KeyF">F (Use / Pickup)</option>
+                <option value="KeyC">C (Character / Switch)</option>
+                <option value="Digit1">1 (Weapon / Character 1)</option>
+                <option value="Digit2">2 (Weapon / Character 2)</option>
+                <option value="Digit3">3 (Weapon / Character 3)</option>
+                <option value="Digit4">4 (Weapon / Character 4)</option>
+                <option value="Tab">Tab (Inventory / Menu)</option>
+                <option value="Escape">Escape (Pause)</option>
+              </select>
+            </div>
+            <div class="config-field">
+              <label>Size (<span id="lblElemSize">1.0x</span>)</label>
+              <input type="range" id="rangeElemSize" min="0.5" max="2.0" step="0.1" value="1.0" class="range-slider">
+            </div>
+            <div class="config-field">
+              <label>Opacity (<span id="lblElemOpacity">80%</span>)</label>
+              <input type="range" id="rangeElemOpacity" min="10" max="100" value="80" class="range-slider">
+            </div>
+          </div>
+          <div class="config-actions">
+            <button id="btnDeleteElement" class="btn btn-sm btn-danger">Delete Control</button>
+          </div>
+        </div>
+        <div class="editor-footer">
+          <button id="btnSaveLayout" class="btn btn-sm btn-primary">💾 Save Profile Layout</button>
+          <button id="btnExportLayout" class="btn btn-sm btn-glass">Export JSON</button>
+          <button id="btnImportLayout" class="btn btn-sm btn-glass">Import JSON</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAIRING MODAL -->
+  <div id="pairModal" class="modal-backdrop hidden">
+    <div class="modal-card glass-panel">
+      <div class="modal-header">
+        <h3>🔗 Pair with Windows PC</h3>
+        <button id="btnClosePairModal" class="btn-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>Enter the 4-digit PIN displayed on your Windows PC screen or host console to securely authorize this device.</p>
+        <div class="pin-input-container">
+          <input type="number" id="txtPinInput" class="pin-input" placeholder="••••" maxlength="4">
+        </div>
+        <div class="form-group">
+          <label for="txtDeviceName">Device Name</label>
+          <input type="text" id="txtDeviceName" class="form-control" placeholder="My iPhone / Android">
+        </div>
+        <div id="pairError" class="alert-error hidden"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnSubmitPair" class="btn btn-primary btn-block">Confirm & Pair Device</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADD CUSTOM GAME MODAL -->
+  <div id="addGameModal" class="modal-backdrop hidden">
+    <div class="modal-card glass-panel">
+      <div class="modal-header">
+        <h3>➕ Add Custom Windows Game</h3>
+        <button id="btnCloseAddGame" class="btn-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Game Title</label>
+          <input type="text" id="txtNewGameTitle" class="form-control" placeholder="e.g. Cyberpunk 2077">
+        </div>
+        <div class="form-group">
+          <label>Executable Path</label>
+          <input type="text" id="txtNewGamePath" class="form-control" placeholder="C:\Games\MyGame\game.exe">
+        </div>
+        <div class="form-group">
+          <label>Base Control Template</label>
+          <select id="selNewGameTemplate" class="form-control">
+            <option value="roblox">Roblox (Movement + Camera + Action)</option>
+            <option value="gtav">GTA V (On-foot / Driving Dual Mode)</option>
+            <option value="genshin">Genshin Impact (Skills + Burst + Jump)</option>
+            <option value="wuwa">Wuthering Waves (Dodge + Echo + Liberation)</option>
+            <option value="minecraft">Minecraft (Mine + Place + Sneak)</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnSubmitAddGame" class="btn btn-primary btn-block">Add to Game Library</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/stream.js"></script>
+  <script src="/controls.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>

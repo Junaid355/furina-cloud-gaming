@@ -1,0 +1,22 @@
+<!-- d:\cloud\FurinaHost\wwwroot\assets\icons\furina-logo.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="furinaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#4de8e0"/>
+      <stop offset="50%" stop-color="#5ca0f2"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  <circle cx="50" cy="50" r="44" fill="none" stroke="url(#furinaGrad)" stroke-width="3" filter="url(#glow)"/>
+  <circle cx="50" cy="50" r="38" fill="#0b0f19" stroke="rgba(77,232,224,0.3)" stroke-width="1.5"/>
+  <path d="M50 18 L60 38 L82 42 L66 58 L70 80 L50 70 L30 80 L34 58 L18 42 L40 38 Z" fill="url(#furinaGrad)" opacity="0.9"/>
+  <circle cx="50" cy="50" r="12" fill="#0b0f19" stroke="#4de8e0" stroke-width="2"/>
+  <circle cx="50" cy="50" r="5" fill="#4de8e0"/>
+</svg>
